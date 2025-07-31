@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - EduMotion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* الأساسيات */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --gray: #6b7280;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Loader */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* الشريط الجانبي */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background-color: var(--dark);
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-title {
+            padding: 10px 20px;
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #d1d5db;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-right: 3px solid transparent;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-right-color: var(--primary);
+        }
+        
+        .menu-item i {
+            margin-left: 10px;
+            font-size: 18px;
+        }
+        
+        .menu-item .badge {
+            margin-right: auto;
+            background-color: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-right: 280px;
+            transition: all 0.3s ease;
+        }
+        
+        /* شريط التنقل العلوي */
+        .top-navbar {
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+        
+        .toggle-sidebar {
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            padding-right: 40px;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-icon, .user-profile {
+            margin-right: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .notification-icon i {
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background-color: var(--danger);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+        
+        .user-profile img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        /* بطاقات الإحصائيات */
+        .stats-cards {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .stat-card.primary::before {
+            background-color: var(--primary);
+        }
+        
+        .stat-card.secondary::before {
+            background-color: var(--secondary);
+        }
+        
+        .stat-card.danger::before {
+            background-color: var(--danger);
+        }
+        
+        .stat-card.warning::before {
+            background-color: var(--warning);
+        }
+        
+        .stat-card .stat-title {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .stat-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-card .stat-change.up {
+            color: var(--secondary);
+        }
+        
+        .stat-card .stat-change.down {
+            color: var(--danger);
+        }
+        
+        .stat-card .stat-icon {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            opacity: 0.2;
+        }
+        
+        /* الجداول */
+        .content-section {
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .card-header .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn i {
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            color: var(--dark);
+        }
+        
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #0d9488;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status.active {
+            background-color: #d1fae5;
+            color: var(--secondary);
+        }
+        
+        .status.inactive {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+        
+        .status.pending {
+            background-color: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f3f4f6;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .action-btn.edit {
+            color: var(--primary);
+        }
+        
+        .action-btn.delete {
+            color: var(--danger);
+        }
+        
+        /* نماذج الإضافة والتعديل */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-header .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* الرسومات البيانية */
+        .chart-container {
+            padding: 20px;
+            height: 350px;
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-in-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Custom Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="page-loader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- الشريط الجانبي -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="assistant/img/education.png" alt="Logo">
+            <h3>EduMotion</h3>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-title">القائمة الرئيسية</div>
+            <a href="#" class="menu-item active">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </a>
+            
+            <div class="menu-title">إدارة المحتوى</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>الطلاب</span>
+                <span class="badge">24 جديد</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>المدرسين</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>الكورسات</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-video"></i>
+                <span>الدروس</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>الامتحانات</span>
+            </a>
+            
+            <div class="menu-title">المالية</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>المدفوعات</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-gift"></i>
+                <span>أكواد الخصم</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-wallet"></i>
+                <span>شحن الرصيد</span>
+            </a>
+            
+            <div class="menu-title">التقارير</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>الإحصائيات</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-file-excel"></i>
+                <span>التقارير</span>
+            </a>
+            
+            <div class="menu-title">الإعدادات</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>إعدادات المنصة</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-user-shield"></i>
+                <span>المشرفين</span>
+            </a>
+            <a href="#" class="menu-item" id="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- شريط التنقل العلوي -->
+        <div class="top-navbar">
+            <div class="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" placeholder="ابحث هنا...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="user-menu">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/150" alt="User">
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقات الإحصائيات -->
+        <div class="stats-cards">
+            <div class="stat-card primary" data-aos="fade-up">
+                <div class="stat-title">إجمالي الطلاب</div>
+                <div class="stat-value">1,245</div>
+                <div class="stat-change up">
+                    <i class="fas fa-arrow-up"></i> 12% عن الشهر الماضي
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            
+            <div class="stat-card secondary" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-title">إجمالي الإيرادات</div>
+                <div class="stat-value">25,450 ج.م</div>
+                <div class="stat-change up">
+                    <i class="fas fa-arrow-up"></i> 8% عن الشهر الماضي
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+            
+            <div class="stat-card danger" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-title">الكورسات النشطة</div>
+                <div class="stat-value">48</div>
+                <div class="stat-change down">
+                    <i class="fas fa-arrow-down"></i> 2 كورسات منتهية
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+            </div>
+            
+            <div class="stat-card warning" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-title">الدروس الجديدة</div>
+                <div class="stat-value">156</div>
+                <div class="stat-change up">
+                    <i class="fas fa-arrow-up"></i> 24 درس هذا الأسبوع
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- الرسومات البيانية -->
+        <div class="content-section">
+            <div class="card" data-aos="fade-up">
+                <div class="card-header">
+                    <h3>إحصائيات الطلاب</h3>
+                    <div class="actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-calendar"></i> هذا الشهر
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="studentsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- أحدث الطلاب المسجلين -->
+        <div class="content-section">
+            <div class="card" data-aos="fade-up">
+                <div class="card-header">
+                    <h3>أحدث الطلاب المسجلين</h3>
+                    <div class="actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-eye"></i> عرض الكل
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الطالب</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fade-in">
+                                <td>1</td>
+                                <td>
+                                    <img src="https://via.placeholder.com/150" class="user-avatar">
+                                    أحمد محمد
+                                </td>
+                                <td>ahmed@example.com</td>
+                                <td>2023-10-15</td>
+                                <td><span class="status active">نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fade-in">
+                                <td>2</td>
+                                <td>
+                                    <img src="https://via.placeholder.com/150" class="user-avatar">
+                                    علي محمود
+                                </td>
+                                <td>ali@example.com</td>
+                                <td>2023-10-14</td>
+                                <td><span class="status active">نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fade-in">
+                                <td>3</td>
+                                <td>
+                                    <img src="https://via.placeholder.com/150" class="user-avatar">
+                                    مريم أحمد
+                                </td>
+                                <td>mariam@example.com</td>
+                                <td>2023-10-13</td>
+                                <td><span class="status pending">بانتظار الدفع</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fade-in">
+                                <td>4</td>
+                                <td>
+                                    <img src="https://via.placeholder.com/150" class="user-avatar">
+                                    يوسف خالد
+                                </td>
+                                <td>youssef@example.com</td>
+                                <td>2023-10-12</td>
+                                <td><span class="status inactive">غير نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- أحدث الكورسات -->
+        <div class="content-section">
+            <div class="card" data-aos="fade-up">
+                <div class="card-header">
+                    <h3>أحدث الكورسات</h3>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="addCourseBtn">
+                            <i class="fas fa-plus"></i> إضافة كورس جديد
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>صورة الكورس</th>
+                                <th>اسم الكورس</th>
+                                <th>الصف</th>
+                                <th>السعر</th>
+                                <th>عدد الطلاب</th>
+                                <th>التقييم</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fade-in">
+                                <td>1</td>
+                                <td>
+                                    <img src="assistant/img/6b21731b-7c1a-4287-8fcf-d1e7a14efd2a-removebg-preview.png" width="50">
+                                </td>
+                                <td>كورس الجبر الشامل</td>
+                                <td>الأول الثانوي</td>
+                                <td>300 ج.م</td>
+                                <td>125</td>
+                                <td>
+                                    <i class="fas fa-star" style="color: gold;"></i> 4.8
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fade-in">
+                                <td>2</td>
+                                <td>
+                                    <img src="assistant/img/6b21731b-7c1a-4287-8fcf-d1e7a14efd2a-removebg-preview.png" width="50">
+                                </td>
+                                <td>كورس الهندسة التحليلية</td>
+                                <td>الثاني الثانوي</td>
+                                <td>250 ج.م</td>
+                                <td>98</td>
+                                <td>
+                                    <i class="fas fa-star" style="color: gold;"></i> 4.7
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fade-in">
+                                <td>3</td>
+                                <td>
+                                    <img src="assistant/img/6b21731b-7c1a-4287-8fcf-d1e7a14efd2a-removebg-preview.png" width="50">
+                                </td>
+                                <td>كورس التفاضل والتكامل</td>
+                                <td>الثالث الثانوي</td>
+                                <td>400 ج.م</td>
+                                <td>156</td>
+                                <td>
+                                    <i class="fas fa-star" style="color: gold;"></i> 4.9
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <div class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إضافة كورس جديد -->
+    <div class="modal" id="addCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة كورس جديد</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="courseForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>اسم الكورس</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>الصف الدراسي</label>
+                            <select class="form-control" required>
+                                <option value="">اختر الصف</option>
+                                <option value="first">الأول الثانوي</option>
+                                <option value="second">الثاني الثانوي</option>
+                                <option value="third">الثالث الثانوي</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>السعر (ج.م)</label>
+                            <input type="number" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>خصم (٪)</label>
+                            <input type="number" class="form-control" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>صورة الكورس</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>وصف الكورس</label>
+                        <textarea class="form-control" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>المحتوى التعليمي</label>
+                        <div id="lessonSections">
+                            <div class="lesson-section">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="اسم الدرس">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" class="form-control">
+                                    </div>
+                                    <button type="button" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline" id="addLessonBtn">
+                            <i class="fas fa-plus"></i> إضافة درس جديد
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">إلغاء</button>
+                <button class="btn btn-primary">حفظ الكورس</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إضافة رصيد للطالب -->
+    <div class="modal" id="addBalanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>شحن رصيد للطالب</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="balanceForm">
+                    <div class="form-group">
+                        <label>اختر الطالب</label>
+                        <select class="form-control" required>
+                            <option value="">اختر الطالب</option>
+                            <option value="1">أحمد محمد</option>
+                            <option value="2">علي محمود</option>
+                            <option value="3">مريم أحمد</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>المبلغ (ج.م)</label>
+                        <input type="number" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>طريقة الشحن</label>
+                        <select class="form-control" required>
+                            <option value="">اختر طريقة الشحن</option>
+                            <option value="vodafone">فودافون كاش</option>
+                            <option value="instapay">انستاباي</option>
+                            <option value="bank">تحويل بنكي</option>
+                            <option value="code">كود شحن</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ملاحظات (اختياري)</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">إلغاء</button>
+                <button class="btn btn-success">شحن الرصيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إنشاء أكواد شراء -->
+    <div class="modal" id="createCodeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إنشاء أكواد شراء</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="codeForm">
+                    <div class="form-group">
+                        <label>نوع الكود</label>
+                        <select class="form-control" required>
+                            <option value="">اختر نوع الكود</option>
+                            <option value="course">كورس معين</option>
+                            <option value="balance">رصيد</option>
+                            <option value="discount">خصم</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>عدد الأكواد</label>
+                            <input type="number" class="form-control" min="1" max="100" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>قيمة الكود</label>
+                            <input type="number" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>تاريخ الانتهاء</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الكورس المستهدف (إذا كان نوع الكود "كورس معين")</label>
+                        <select class="form-control">
+                            <option value="">اختر الكورس</option>
+                            <option value="1">كورس الجبر الشامل</option>
+                            <option value="2">كورس الهندسة التحليلية</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">إلغاء</button>
+                <button class="btn btn-primary">إنشاء الأكواد</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            once: false,
+            mirror: true
+        });
+
+        // Loader
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("page-loader");
+            loader.style.opacity = "0";
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 500);
+        });
+
+        // Toggle sidebar on mobile
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.sidebar') && !e.target.closest('.toggle-sidebar')) {
+                document.querySelector('.sidebar').classList.remove('active');
+            }
+        });
+
+        // Modal functionality
+        const modals = document.querySelectorAll('.modal');
+        const addCourseBtn = document.getElementById('addCourseBtn');
+        
+        // Open modal
+        addCourseBtn.addEventListener('click', function() {
+            document.getElementById('addCourseModal').classList.add('active');
+        });
+        
+        // Close modal
+        document.querySelectorAll('.close, .close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                modals.forEach(modal => modal.classList.remove('active'));
+            });
+        });
+        
+        // Close modal when clicking outside
+        modals.forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Add new lesson section
+        document.getElementById('addLessonBtn').addEventListener('click', function() {
+            const lessonSection = document.createElement('div');
+            lessonSection.className = 'lesson-section';
+            lessonSection.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="اسم الدرس">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" class="form-control">
+                    </div>
+                    <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            document.getElementById('lessonSections').appendChild(lessonSection);
+            
+            // Add event listener to new delete button
+            lessonSection.querySelector('.btn-danger').addEventListener('click', function() {
+                lessonSection.remove();
+            });
+        });
+
+        // Initialize charts
+        const ctx = document.getElementById('studentsChart').getContext('2d');
+        const studentsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو'],
+                datasets: [{
+                    label: 'الطلاب المسجلين',
+                    data: [120, 190, 170, 220, 240, 280, 310],
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderColor: 'rgba(37, 99, 235, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Show success message when form is submitted
+        document.getElementById('courseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('addCourseModal').classList.remove('active');
+            
+            // Show success message
+            const successAlert = document.createElement('div');
+            successAlert.className = 'global-alert alert-success show';
+            successAlert.textContent = 'تم إضافة الكورس بنجاح!';
+            document.body.appendChild(successAlert);
+            
+            setTimeout(() => {
+                successAlert.classList.remove('show');
+                setTimeout(() => successAlert.remove(), 300);
+            }, 3000);
+        });
+    </script>
+    <script>
+        // تأكد أن المستخدم مسجل دخول
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+        if (!isLoggedIn || isLoggedIn !== 'true') {
+            // لو مش مسجل دخول، رجعه لصفحة تسجيل الدخول
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script>
+        const logoutBtn = document.querySelector("#logout");
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userEmail");
+            window.location.href = "login.html";
+            });
+        }
+    </script>
+
+</body>
+</html>

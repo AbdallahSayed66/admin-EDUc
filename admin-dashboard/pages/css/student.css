@@ -1,0 +1,288 @@
+/* ====== الأساسيات العامة ====== */
+body {
+  margin: 0;
+  font-family: 'Tajawal', sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+  direction: rtl;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ====== الشريط الجانبي (Sidebar) ====== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100vh;
+  background: #1e40af;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-header img {
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.sidebar-menu {
+  padding: 20px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.menu-item {
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #eee;
+  transition: background 0.3s;
+}
+
+.menu-item:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.menu-item.active {
+  background-color: #2563eb;
+}
+
+/* ====== الجزء الرئيسي ====== */
+.main-content {
+  margin-right: 250px;
+  padding: 0;
+}
+
+/* ====== التوب بار ====== */
+.top-navbar {
+  height: 70px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.toggle-sidebar i {
+  font-size: 22px;
+  color: #333;
+  cursor: pointer;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.notification-icon {
+  position: relative;
+  font-size: 20px;
+  color: #2563eb;
+}
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  left: -8px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.user-profile img {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ====== قسم المحتوى ====== */
+.content-section {
+  padding: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #1e40af;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn i {
+  margin-left: 5px;
+}
+
+.btn:hover {
+  background-color: #1e40af;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+th, td {
+  padding: 15px 10px;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status.active {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.status.inactive {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  padding: 8px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  color: #1e3a8a;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.action-btn:hover {
+  background-color: #cbd5e1;
+}
+
+.edit {
+  background-color: #c7f9cc;
+}
+
+.delete {
+  background-color: #fde2e4;
+}
+
+/* ====== تجاوب الشاشات ====== */
+@media (max-width: 991px) {
+  .main-content {
+    margin-right: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .top-navbar {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+}

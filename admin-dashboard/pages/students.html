@@ -1,0 +1,138 @@
+<!-- ملف: pages/students.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>الطلاب | EduMotion</title>
+    <link rel="stylesheet" href="css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <!-- نفس الشريط الجانبي الموجود في الرئيسية -->
+    <div class="sidebar-header">
+      <img src="../assistant/img/education.png" alt="Logo">
+      <h3>EduMotion</h3>
+    </div>
+    <div class="sidebar-menu">
+      <a href="../dashboard.html" class="menu-item">
+        <i class="fas fa-home"></i>
+        <span>الرئيسية</span>
+      </a>
+      <a href="students.html" class="menu-item active">
+        <i class="fas fa-users"></i>
+        <span>الطلاب</span>
+      </a>
+      <a href="teachers.html" class="menu-item">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span>المدرسين</span>
+      </a>
+      <a href="courses.html" class="menu-item">
+        <i class="fas fa-book"></i>
+        <span>الكورسات</span>
+      </a>
+      <a href="lessons.html" class="menu-item">
+        <i class="fas fa-video"></i>
+        <span>الدروس</span>
+      </a>
+      <a href="exams.html" class="menu-item">
+        <i class="fas fa-file-alt"></i>
+        <span>الامتحانات</span>
+      </a>
+      <a href="payments.html" class="menu-item">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>المدفوعات</span>
+      </a>
+      <a href="discounts.html" class="menu-item">
+        <i class="fas fa-gift"></i>
+        <span>أكواد الخصم</span>
+      </a>
+      <a href="balance.html" class="menu-item">
+        <i class="fas fa-wallet"></i>
+        <span>شحن الرصيد</span>
+      </a>
+      <a href="stats.html" class="menu-item">
+        <i class="fas fa-chart-line"></i>
+        <span>الإحصائيات</span>
+      </a>
+      <a href="reports.html" class="menu-item">
+        <i class="fas fa-file-excel"></i>
+        <span>التقارير</span>
+      </a>
+      <a href="settings.html" class="menu-item">
+        <i class="fas fa-cog"></i>
+        <span>إعدادات المنصة</span>
+      </a>
+      <a href="admins.html" class="menu-item">
+        <i class="fas fa-user-shield"></i>
+        <span>المشرفين</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>تسجيل الخروج</span>
+      </a>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="top-navbar">
+      <div class="toggle-sidebar">
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="ابحث هنا...">
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="user-menu">
+        <div class="notification-icon">
+          <i class="fas fa-bell"></i>
+          <span class="notification-count">3</span>
+        </div>
+        <div class="user-profile">
+          <img src="https://via.placeholder.com/150" alt="User">
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="card">
+        <div class="card-header">
+          <h3>قائمة الطلاب</h3>
+          <button class="btn btn-primary"><i class="fas fa-plus"></i> طالب جديد</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>الاسم</th>
+                <th>البريد الإلكتروني</th>
+                <th>الحالة</th>
+                <th>تاريخ التسجيل</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>أحمد محمد</td>
+                <td>ahmed@example.com</td>
+                <td><span class="status active">نشط</span></td>
+                <td>2025-07-30</td>
+                <td>
+                  <div class="action-buttons">
+                    <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                    <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- المزيد من الطلاب -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
